@@ -1,5 +1,5 @@
 pipeline {
-    "agent {demo2}"
+    agent { label 'demo2' }
     parameters {
         string(name: 'instancetype', defaultValue: 'PROD', description: 'Type of instance to deploy')
         booleanParam(name: 'verificationRequired', defaultValue: true, description: "")
