@@ -1,0 +1,89 @@
+pipeline {
+    agent any
+    parameters {
+        string(name: 'instancetype', defaultValue: 'PROD', description: 'Type of instance to deploy')
+        booleanParam(name: 'verificationRequired', defaultValue: true, description: "")
+        choice(name: 'instance', choices: ['APP', 'APP2', 'DEMO', 'DEMO2'], description: 'Type of instance to deploy')
+    }
+
+    stages {
+        stage('Test') {
+            steps {
+                sh '''
+                whoami
+                hostname
+                ifconfig ens192
+                ls 
+                date
+                pwd
+                '''
+                sh '''
+                echo ${BUILD_ID}
+                '''
+                sh '''
+                echo ${instancetype}
+                '''
+                 sh '''
+                echo ${instance}
+                '''
+                sh '''
+                echo ${COMPANY_NAME}
+                '''
+            }
+            post {
+                success {
+                    echo 'Test stage completed successfully'
+                }
+                failure {
+                    echo 'Test stage failed'
+                }
+            }
+        }
+        stage('BUILD') {
+            environment {
+                username='Gagandeep'
+            }
+            steps {
+                sh 'echo "${username}"'
+            }
+            post {
+                success {
+                    echo 'Build stage completed successfully'
+                }
+                failure {
+                    echo 'Build stage failed'
+                }
+            }
+        }
+        stage('DEPLOY') {
+            input {
+                message "Continue Deployment"
+            }
+            steps {
+                echo 'Hello World'
+            }
+            post {
+                success {
+                    echo 'Deploy stage completed successfully'
+                }
+                failure {
+                    echo 'Deploy stage failed'
+                }
+            }
+        }
+    }
+    post { 
+        always { 
+            echo 'I will always say Hello again!'
+        }
+        failure { 
+            echo 'I will always say Hello failure!'
+        }
+        aborted { 
+             echo 'I will always say Hello aborted!'
+        }
+        success { 
+            echo 'I will always say Hello success!'
+        }
+    }
+}
